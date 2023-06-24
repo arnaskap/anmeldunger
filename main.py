@@ -1,8 +1,7 @@
+import argparse
 from bs4 import BeautifulSoup
 import requests
 from urllib.parse import urljoin
-
-WRITE_HTML = False
 
 URL_ROOT = 'https://service.berlin.de'
 CALENDAR_ENDPOINT = 'terminvereinbarung/termin/all/120686/'
@@ -22,7 +21,6 @@ def get_parsed_website(url):
 
 def filter_available_date_elements(parsed_website):
     available_date_elements = []
-    # not_available_date_elements = []
 
     month_elements = parsed_website.find_all(class_='calendar-month-table')
 
@@ -38,11 +36,14 @@ def filter_available_date_elements(parsed_website):
             if day_element_title and APPT_AVAILABLE_TEXT in day_element_title:
                 available_date_elements.append(day_element_inner)
 
-            # if day_element_title and NO_APPT_AVAILABLE_TEXT in day_element_title:
-            #     not_available_date_elements.append(day_element)
-
     return available_date_elements
 
+
+parser = argparse.ArgumentParser()
+parser.add_argument('--write-html', action='store_true', default=False,
+                    help='Output html files of accessed links. Useful for debugging')
+
+args = parser.parse_args()
 
 calendar_url = urljoin(URL_ROOT, CALENDAR_ENDPOINT)
 parsed_appt_calendar = get_parsed_website(calendar_url)
@@ -51,7 +52,7 @@ available_dates = filter_available_date_elements(parsed_appt_calendar)
 for date in available_dates:
     print(f'{date.get("aria-label")}: {urljoin(URL_ROOT, date.get("href"))}')
 
-if WRITE_HTML:
+if args.write_html:
     file_path = 'output/startpage.html'
     file = open(file_path, 'w')
     file.write(parsed_appt_calendar.prettify())
