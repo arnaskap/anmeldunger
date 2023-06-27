@@ -1,4 +1,4 @@
-from AppointmentRetriever import AppointmentRetriever
+from anmeldunger.AppointmentRetriever import AppointmentRetriever
 import responses
 import unittest
 from urllib.parse import urljoin
