@@ -1,6 +1,6 @@
 import argparse
 
-from AppointmentRetriever import AppointmentRetriever
+from anmeldunger.AppointmentRetriever import AppointmentRetriever
 
 
 parser = argparse.ArgumentParser()

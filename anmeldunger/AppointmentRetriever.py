@@ -1,4 +1,4 @@
-from AppointmentDate import AppointmentDate
+from anmeldunger.AppointmentDate import AppointmentDate
 from bs4 import BeautifulSoup
 import re
 import requests
