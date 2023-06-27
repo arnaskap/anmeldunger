@@ -1,4 +1,5 @@
 from anmeldunger.AppointmentRetriever import AppointmentRetriever
+import os
 import responses
 import unittest
 from urllib.parse import urljoin
@@ -13,7 +14,9 @@ class TestAppointmentRetriever(unittest.TestCase):
 
         self.uut = AppointmentRetriever(root_url, calendar_endpoint)
 
-        with open('data/calendar_with_appointments.html', 'r') as calendar_html_file:
+        current_file_path = os.path.abspath(__file__)
+        html_file_path = os.path.join(os.path.dirname(current_file_path), 'data/calendar_with_appointments.html')
+        with open(html_file_path, 'r') as calendar_html_file:
             calendar_url = urljoin(root_url, calendar_endpoint)
             session_available_url = urljoin(root_url, session_endpoint_available)
             session_unavailable_url = urljoin(root_url, session_endpoint_unavailable)
