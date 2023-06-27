@@ -11,9 +11,9 @@ TAKEN_URL = 'https://service.berlin.de/terminvereinbarung/termin/taken/'
 
 
 class AppointmentRetriever:
-    def __init__(self, url_root, calendar_endpoint):
-        self._url_root = url_root
-        self._calendar_url = urljoin(url_root, calendar_endpoint)
+    def __init__(self, root_url, calendar_endpoint):
+        self._root_url = root_url
+        self._calendar_url = urljoin(root_url, calendar_endpoint)
 
         self._session = None
         self._session_url = None
@@ -28,7 +28,7 @@ class AppointmentRetriever:
 
     def _parse_appointment_date(self, appointment_element):
         date = re.match(r'\d\d\.\d\d\.\d\d\d\d', appointment_element.get('title')).group()
-        url = urljoin(self._url_root, appointment_element.get('href'))
+        url = urljoin(self._root_url, appointment_element.get('href'))
         return AppointmentDate(date, url)
 
     def try_initiate_session(self):
@@ -45,8 +45,12 @@ class AppointmentRetriever:
         return True
 
     def parse_available_appointments(self):
-        response = self._get_for_session(self._calendar_url)
-        parsed_website = BeautifulSoup(response.content, 'html.parser')
+        if self._session is None:
+            raise Exception('Tried to retrieve appointments with no initiated session')
+
+        print(f'Retrieving appointments from {self._session_url}')
+        response = self._get_for_session(self._session_url)
+        parsed_website = BeautifulSoup(response.text, 'html.parser')
 
         available_date_elements = []
 

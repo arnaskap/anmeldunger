@@ -9,13 +9,13 @@ parser.add_argument('--calendar-endpoint', default='terminvereinbarung/termin/al
                     help='Website endpoint to initiate calendar checking session with.')
 parser.add_argument('--output-path', default=None, help='Directory to output HTML files. Must be set to output files.')
 parser.add_argument('--refresh-rate-seconds', default=60, help='How often to refresh for new appointments.')
-parser.add_argument('--url-root', default='https://service.berlin.de', help='Root URL of Buergeramt website.')
+parser.add_argument('--root-url', default='https://service.berlin.de', help='Root URL of Buergeramt website.')
 parser.add_argument('--write-html', action='store_true', default=False,
                     help='Output html files of accessed links. Useful for debugging.')
 
 args = parser.parse_args()
 
-appointment_retriever = AppointmentRetriever(args.url_root, args.calendar_endpoint)
+appointment_retriever = AppointmentRetriever(args.root_url, args.calendar_endpoint)
 
 inited_session = appointment_retriever.try_initiate_session()
 if not inited_session:
